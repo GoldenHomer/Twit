@@ -9,16 +9,27 @@
 
   $connection = new TwitterOAuth($apikey, $apisecret, $accesstoken, $accesssecret);
 
-  print_r($connection); //Test
+  // print_r($connection); //Test
 
-  $tweets = $connection -> get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=josecanyewsee&count=2");
+  // $tweets = $connection -> get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=josecanyewsee&count=2");
 
-  foreach ($tweets as $tweet) {
-  	echo $tweet -> text;
+  // foreach ($tweets as $tweet) {
+  // 	echo $tweet -> text;
 
-  	echo "<br />";
+  // 	echo "<br />";
+  // }
+
+  $response = $connection -> get("https://api.twitter.com/1.1/statuses/home_timeline.json?count=10");
+  
+  foreach ($response as $tweet) {
+    
+     $favorites = $tweet -> favorite_count;
+
+     if ($favorites >= 2) {
+
+       $embed = $connection -> get("https://api.twitter.com/1.1/statuses/oembed.json?id=".$tweet -> id);
+       echo $embed -> html;
+
+     }
   }
-
-  $response = $connection -> post("https://api.twitter.com/1.1/statuses/update.json",
-  	array("status" => "This API sucks but it works."));
 ?>
